@@ -26,6 +26,7 @@
 <script>
 import { getStoriesMeta, ajaxGetStoryByIndexUnstable } from '@/stories-api.js'
 import VStory from '@/components/VStory.vue'
+const stories = new Map()
 export default {
   name: 'App',
   components: {
@@ -33,7 +34,6 @@ export default {
   },
   data () {
     return {
-      stories: [],
       activeStoryIndex: 0,
       loading: false,
       total: 0,
@@ -119,12 +119,15 @@ export default {
 
     async getStoryByIndex (index) {
       this.loading = true
-      const story = await ajaxGetStoryByIndexUnstable(index)
-      if (!story) {
-        return false
+      let story
+      if (stories.has(index)) {
+        story = stories.get(index)
+      } else {
+         story = await ajaxGetStoryByIndexUnstable(index)
+         if (!story) return false
+         stories.set(index, story)
       }
       this.activeStory = story
-      this.stories.push(this.activeStory)
       this.loading = false
       return this.activeStory
     }

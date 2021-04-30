@@ -3,8 +3,8 @@
     <VStory
       :imageUrl="activeStory.imageUrl"
       :text="activeStory.text"
-      @prevImage="prevImage"
-      @nextImage="nextImage"
+      @prev="prevImage"
+      @next="nextImage"
     ></VStory>
     <div class="story__loading"
       v-show="loading"
@@ -29,33 +29,57 @@ export default {
       activeStoryIndex: 0,
       loading: false,
       total: 0,
-      activeStory: {}
+      activeStory: {},
     }
   },
+  computed: {
+    hasNotNextStory () {
+      return this.activeStoryIndex + 1 > this.total - 1
+    },
+    hasNotPrevStory () {
+      return this.activeStoryIndex - 1 < 0
+    },
+  },
   methods: {
+    setNextPageCountdown (duration) {
+      if (this.timer) window.clearTimeout(this.timer)
+      this.duration = duration
+      this.timer = window.setTimeout(async () => {
+        if (this.hasNotNextStory) return
+        const { duration } = await this.getStoryByIndex(++this.activeStoryIndex)
+        this.setNextPageCountdown(duration)
+      }, duration)
+    },
     async prevImage () {
-      if (this.activeStoryIndex - 1 < 0) return
-      this.activeStoryIndex--
-      this.getStoryByIndex(this.activeStoryIndex)
+      if (this.hasNotPrevStory) return
+      if (this.timer) window.clearTimeout(this.timer)
+      const { duration } = await this.getStoryByIndex(--this.activeStoryIndex)
+      this.setNextPageCountdown(duration)
     },
-    nextImage () {
-      if (this.activeStoryIndex + 1 > this.total) return
-      this.activeStoryIndex++
-      this.getStoryByIndex(this.activeStoryIndex)
+    async nextImage () {
+      if (this.hasNotNextStory) return
+      if (this.timer) window.clearTimeout(this.timer)
+      const { duration } = await this.getStoryByIndex(++this.activeStoryIndex)
+      this.setNextPageCountdown(duration)
     },
-
     async init () {
       this.total = getStoriesMeta().length
-      this.getStoryByIndex(this.activeStoryIndex)
+
+       const { duration } = await this.getStoryByIndex(this.activeStoryIndex)
+       this.setNextPageCountdown(duration)
     },
     async getStoryByIndex (index) {
       this.loading = true
       this.activeStory = await ajaxGetStoryByIndex(index)
       this.loading = false
+      return this.activeStory
     }
   },
   mounted () {
     this.init()
+  },
+  beforeDestroy () {
+    window.clearTimeout(this.timer)
   }
 }
 </script>

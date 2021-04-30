@@ -9,10 +9,10 @@
 				{{ text }}
 			</div>
       <div class="story__left"
-        @click="$emit('prevImage')"
+        @click="$emit('prev')"
       ></div>
       <div class="story__right"
-        @click="$emit('nextImage')"
+        @click="$emit('next')"
       ></div>
 
 		</div>
@@ -30,6 +30,11 @@ export default {
     text: {
       type: String,
       default: ''
+    }
+  },
+  data () {
+    return {
+      timer: null
     }
   }
 }

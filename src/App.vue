@@ -9,7 +9,9 @@
       :total="total"
       :activeIndex="activeStoryIndex"
       :duration="duration"
-      :elapsedTime="elapsedTime"
+      @touchstart.prevent="pause"
+      @touchend="resume"
+      :isHoldStory="isHoldStory"
     >
     </VStory>
     
@@ -32,8 +34,12 @@ export default {
       loading: false,
       total: 0,
       activeStory: {},
+      startTime: 0,
+      duration: 0,
+      lessTime: 0,
+      isHoldStory: false,
       elapsedTime: 0,
-      duration: 0
+      startHoldTime: 0
     }
   },
   computed: {
@@ -45,12 +51,35 @@ export default {
     },
   },
   methods: {
+    pause () {
+      this.startHoldTime = new Date().getTime()
+      this.elapsedTime = this.startHoldTime - this.startTime // 已經經過時間
+      this.lessTime = this.duration - this.elapsedTime // 剩餘多少時間
+      this.isHoldStory = true
+      window.clearTimeout(this.timer)
+    },
+    resume (e) {
+      const nowTime = new Date().getTime()
+      this.isHoldStory = false
+      if (nowTime - this.startHoldTime < 100) {
+        if (e.target.classList.contains('story__left')) {
+          this.prevImage()
+        }
+        if (e.target.classList.contains('story__right')) {
+          this.nextImage()
+        }
+        return
+      }
+      this.startTime = nowTime - this.elapsedTime
+      this.timer = window.setTimeout(() => this.nextImage(), this.lessTime)
+
+      
+    },
     createNextPageCountdown (duration) {
       if (this.timer) window.clearTimeout(this.timer)
       if (this.elapsedTimer) window.clearInterval(this.elapsedTimer)
       this.duration = duration
-      this.elapsedTime = 0
-      
+      this.startTime = new Date().getTime()
 
       this.timer = window.setTimeout(async () => {
         if (this.hasNotNextStory) return

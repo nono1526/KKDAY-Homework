@@ -1,5 +1,7 @@
 <template>
-  <div class="story" >
+  <div class="story"
+    v-on="$listeners"
+  >
 		<div
       class="story__wrapper"
       :style="{
@@ -21,7 +23,7 @@
             }"
             :style="{
               'animation-duration': `${duration/1000}s`,
-              'animation-play-state': loading ? 'paused' : 'running'
+              'animation-play-state': loading || isHoldStory ? 'paused' : 'running'
             }"
           >
           
@@ -68,11 +70,11 @@ export default {
     activeIndex: {
       type: Number
     },
-    elapsedTime: {
-      type: Number
-    },
     duration: {
       type: Number
+    },
+    isHoldStory: {
+      type: Boolean
     }
   },
   data () {
@@ -89,6 +91,7 @@ export default {
 <style lang="scss" scoped>
 .story {
 	height: 100vh;
+  user-select: none;
   @media screen and (min-width: 524px) {
     max-width: 56.25vh;
     margin-left: auto;
@@ -110,6 +113,7 @@ export default {
   width: 50%;
   left: 0;
   top: 0;
+  user-select: none;
 }
 
 .story__right {
@@ -119,6 +123,7 @@ export default {
   width: 50%;
   left: 50%;
   top: 0;
+  user-select: none;
 }
 
 .story__text {

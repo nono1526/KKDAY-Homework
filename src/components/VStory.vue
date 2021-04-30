@@ -86,11 +86,7 @@ export default {
   },
   data () {
     return {
-      timer: null
     }
-  },
-  methods: {
-    
   }
 }
 </script>
@@ -100,9 +96,11 @@ export default {
 	height: 100vh;
   user-select: none;
   @media screen and (min-width: 576px) {
+    border-radius: 30px;
     max-width: 56.25vh;
     margin-left: auto;
     margin-right: auto;
+    padding: 24px;
   }
 }
 
@@ -111,6 +109,10 @@ export default {
 	background-size: cover;
 	background-position: center;
 	position: relative;
+  @media screen and (min-width: 576px) {
+    border-radius: 12px;
+    overflow: hidden;
+  }
 }
 
 .story__left {
@@ -121,6 +123,7 @@ export default {
   left: 0;
   top: 0;
   user-select: none;
+  cursor: pointer;
 }
 
 .story__right {
@@ -131,6 +134,7 @@ export default {
   left: 50%;
   top: 0;
   user-select: none;
+  cursor: pointer;
 }
 
 .story__text {
@@ -161,7 +165,7 @@ export default {
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color: black;
+  background-color: #313131;
   position: absolute;
   z-index: 1;
   left: 0;

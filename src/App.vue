@@ -148,5 +148,8 @@ body {
 * {
   box-sizing: border-box;
 }
+#app {
+  background-color: #414141;
+}
 
 </style>

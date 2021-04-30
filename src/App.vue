@@ -72,8 +72,6 @@ export default {
       }
       this.startTime = nowTime - this.elapsedTime
       this.timer = window.setTimeout(() => this.nextImage(), this.lessTime)
-
-      
     },
     createNextPageCountdown (duration) {
       if (this.timer) window.clearTimeout(this.timer)
@@ -87,22 +85,22 @@ export default {
         this.createNextPageCountdown(duration)
       }, duration)
     },
+    async changeImageByIndex (index) {
+      if (this.timer) window.clearTimeout(this.timer)
+      const { duration } = await this.getStoryByIndex(index)
+      this.createNextPageCountdown(duration)
+    },
     async prevImage () {
       if (this.hasNotPrevStory) return
-      if (this.timer) window.clearTimeout(this.timer)
-      const { duration } = await this.getStoryByIndex(--this.activeStoryIndex)
-      this.createNextPageCountdown(duration)
+      await this.changeImageByIndex(--this.activeStoryIndex)
     },
     async nextImage () {
       if (this.hasNotNextStory) return
-      if (this.timer) window.clearTimeout(this.timer)
-      const { duration } = await this.getStoryByIndex(++this.activeStoryIndex)
-      this.createNextPageCountdown(duration)
+      this.changeImageByIndex(++this.activeStoryIndex)
     },
     async init () {
       this.total = getStoriesMeta().length
-       const { duration } = await this.getStoryByIndex(this.activeStoryIndex)
-       this.createNextPageCountdown(duration)
+      this.changeImageByIndex(this.activeStoryIndex)
     },
     async getStoryByIndex (index) {
       this.loading = true

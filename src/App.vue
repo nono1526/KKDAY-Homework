@@ -60,8 +60,7 @@ export default {
       this.changeImageByIndex(this.storyId)
     },
     pause (e) {
-      if (e.target.classList.contains('story__loading') || e.target.classList.contains('story__retry') || !this.timer) return
-      
+      if (e.target.classList.contains('story__loading') || e.target.classList.contains('story__retry')|| !this.timer) return
       this.startHoldTime = new Date().getTime()
       this.elapsedTime = this.startHoldTime - this.startTime // 已經經過時間
       this.lessTime = this.duration - this.elapsedTime // 剩餘多少時間
@@ -72,7 +71,7 @@ export default {
       if (e.target.classList.contains('story__loading') || e.target.classList.contains('story__retry')) return
       const nowTime = new Date().getTime()
       this.isHoldStory = false
-      if (nowTime - this.startHoldTime < 100) {
+      if (nowTime - this.startHoldTime < 300) {
         if (e.target.classList.contains('story__left')) {
           this.prevImage()
         }

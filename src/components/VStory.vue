@@ -43,10 +43,7 @@
         Loading...
       </div>
       <div class="story__retry" v-show="error" @pointerdown="$emit('retry')">
-        <div class="story__retry-info">
-          <p>Woops... Something went wrong.</p>
-          <p>Please click here to try again.</p>
-        </div>
+          Click to Reload
       </div>
 		</div>
     
@@ -170,11 +167,6 @@ export default {
   z-index: 1;
   left: 0;
   top: 0;
-  &-info {
-    text-align: center;
-    padding: 0 16px;
-    width: 100%;
-  }
 }
 
 .story__loading {
@@ -189,7 +181,6 @@ export default {
   justify-content: center;
   align-items: center;
   color: white;
-  font-size: 2rem;
 }
 
 .story__header {

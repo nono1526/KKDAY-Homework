@@ -39,7 +39,7 @@ export default {
       total: 0,
       activeStory: {},
       startTime: 0,
-      duration: 0,
+      duration: 1000,
       lessTime: 0,
       isHoldStory: false,
       elapsedTime: 0,

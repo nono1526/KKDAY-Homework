@@ -211,13 +211,13 @@ export default {
   &-tile-fill {
     width: 100%;
     height: 100%;
-    transform: translateX(-100%);
+    transform: translateX(-200%);
     background-color: #fff;
     &--active {
       animation-name: growthWidth;
       animation-timing-function: linear;
       animation-play-state: paused;
-      animation-fill-mode: forwards;
+      animation-fill-mode: both;
     }
   }
 }

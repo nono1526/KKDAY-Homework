@@ -1,5 +1,5 @@
 <template>
-  <div id="story" >
+  <div class="story" >
 		<div
       class="story__wrapper"
       :style="{
@@ -36,8 +36,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#story {
+.story {
 	height: 100vh;
+  @media screen and (min-width: 524px) {
+    max-width: 56.25vh;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .story__wrapper {

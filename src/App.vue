@@ -65,49 +65,6 @@ body {
 	margin: 0;
 }
 
-#stories {
-	height: 100vh;
-
-}
-
-.story {
-	height: 100%;
-	background-size: cover;
-	background-position: center;
-	position: relative;
-}
-
-.story__left {
-  content: '';
-  height: 100%;
-  position: absolute;
-  width: 50%;
-  left: 0;
-  top: 0;
-}
-
-.story__right {
-  content: '';
-  height: 100%;
-  position: absolute;
-  width: 50%;
-  left: 50%;
-  top: 0;
-}
-
-.story__text {
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	padding: 100px 16px 100px;
-	background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
-	text-align: center;
-	font-size: 24px;
-	color: #FFF;
-	line-height: 1.5;
-}
-
 .story__loading {
   position: fixed;
   z-index: 1;

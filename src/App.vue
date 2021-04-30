@@ -59,7 +59,9 @@ export default {
       this.showRetry = false
       this.changeImageByIndex(this.storyId)
     },
-    pause () {
+    pause (e) {
+      if (e.target.classList.contains('story__loading') || e.target.classList.contains('story__retry') || !this.timer) return
+      
       this.startHoldTime = new Date().getTime()
       this.elapsedTime = this.startHoldTime - this.startTime // 已經經過時間
       this.lessTime = this.duration - this.elapsedTime // 剩餘多少時間
@@ -67,6 +69,7 @@ export default {
       window.clearTimeout(this.timer)
     },
     resume (e) {
+      if (e.target.classList.contains('story__loading') || e.target.classList.contains('story__retry')) return
       const nowTime = new Date().getTime()
       this.isHoldStory = false
       if (nowTime - this.startHoldTime < 100) {

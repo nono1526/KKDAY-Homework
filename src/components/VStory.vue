@@ -42,6 +42,12 @@
       >
         Loading...
       </div>
+      <div class="story__retry" v-show="error" @pointerdown="$emit('retry')">
+        <div class="story__retry-info">
+          <p>Woops... Something went wrong.</p>
+          <p>Please click here to try again.</p>
+        </div>
+      </div>
 		</div>
     
 	</div>
@@ -50,6 +56,9 @@
 <script>
 export default {
   props: {
+    error: {
+      type: Boolean
+    },
     imageUrl: {
       type: String,
       default: ''
@@ -145,6 +154,24 @@ export default {
   height: 100%;
 }
 
+.story__retry {
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  &-info {
+    text-align: center;
+    padding: 0 16px;
+    width: 100%;
+  }
+}
 
 .story__loading {
   position: absolute;
@@ -194,7 +221,6 @@ export default {
     }
   }
 }
-
 
 @keyframes growthWidth {
   from {

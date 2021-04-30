@@ -14,6 +14,8 @@
       :isHoldStory="isHoldStory"
       @mousedown.prevent="pause"
       @mouseup.prevent="resume"
+      :error="showRetry"
+      @retry="retry"
     >
     </VStory>
     
@@ -22,7 +24,7 @@
 </template>
 
 <script>
-import { getStoriesMeta, ajaxGetStoryByIndex } from '@/stories-api.js'
+import { getStoriesMeta, ajaxGetStoryByIndexUnstable } from '@/stories-api.js'
 import VStory from '@/components/VStory.vue'
 export default {
   name: 'App',
@@ -41,7 +43,8 @@ export default {
       lessTime: 0,
       isHoldStory: false,
       elapsedTime: 0,
-      startHoldTime: 0
+      startHoldTime: 0,
+      showRetry: false
     }
   },
   computed: {
@@ -53,6 +56,10 @@ export default {
     },
   },
   methods: {
+    retry () {
+      this.showRetry = false
+      this.changeImageByIndex(this.activeStoryIndex)
+    },
     pause () {
       this.startHoldTime = new Date().getTime()
       this.elapsedTime = this.startHoldTime - this.startTime // 已經經過時間
@@ -83,13 +90,17 @@ export default {
 
       this.timer = window.setTimeout(async () => {
         if (this.hasNotNextStory) return
-        const { duration } = await this.getStoryByIndex(++this.activeStoryIndex)
-        this.createNextPageCountdown(duration)
+        this.changeImageByIndex(++this.activeStoryIndex)
       }, duration)
     },
     async changeImageByIndex (index) {
       if (this.timer) window.clearTimeout(this.timer)
-      const { duration } = await this.getStoryByIndex(index)
+      const res = await this.getStoryByIndex(index)
+      if (!res) {
+        this.showRetry = true
+        return false
+      }
+      const { duration } = res
       this.createNextPageCountdown(duration)
     },
     async prevImage () {
@@ -101,12 +112,19 @@ export default {
       this.changeImageByIndex(++this.activeStoryIndex)
     },
     async init () {
-      this.total = getStoriesMeta().length
+      const MAX_STORIES = 6
+      this.total = Math.min(getStoriesMeta().length, MAX_STORIES)
       this.changeImageByIndex(this.activeStoryIndex)
     },
+
     async getStoryByIndex (index) {
       this.loading = true
-      this.activeStory = await ajaxGetStoryByIndex(index)
+      const story = await ajaxGetStoryByIndexUnstable(index)
+      if (!story) {
+        return false
+      }
+      this.activeStory = story
+      this.stories.push(this.activeStory)
       this.loading = false
       return this.activeStory
     }
@@ -115,7 +133,6 @@ export default {
     this.init()
   },
   beforeDestroy () {
-    console.log('destroy')
     window.clearTimeout(this.timer)
   }
 }
@@ -128,7 +145,5 @@ body {
 * {
   box-sizing: border-box;
 }
-
-
 
 </style>

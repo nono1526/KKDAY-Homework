@@ -1,33 +1,28 @@
 <template>
-  <div id="stories" >
-		<div
-      class="story"
-      :style="{
-        backgroundImage: `url(${activeStory.imageUrl})`
-      }">
-			<div class="story__text">
-				Top Things To Do In Ooty
-			</div>
-      <div class="story__left"
-        @click="prevImage"
-      ></div>
-      <div class="story__right"
-        @click="nextImage"
-      ></div>
-      <div class="story__loading"
-        v-show="loading"
-      >
-        loading...
-      </div>
-		</div>
-    
-	</div>
+  <div id="app">
+    <VStory
+      :imageUrl="activeStory.imageUrl"
+      :text="activeStory.text"
+      @prevImage="prevImage"
+      @nextImage="nextImage"
+    ></VStory>
+    <div class="story__loading"
+      v-show="loading"
+    >
+      loading...
+    </div>
+  </div>
+  
 </template>
 
 <script>
 import { getStoriesMeta, ajaxGetStoryByIndex } from '@/stories-api.js'
+import VStory from '@/components/VStory.vue'
 export default {
   name: 'App',
+  components: {
+    VStory
+  },
   data () {
     return {
       stories: [],
@@ -114,11 +109,13 @@ body {
 }
 
 .story__loading {
-  position: absolute;
+  position: fixed;
   z-index: 1;
   background-color: #fff;
   width: 100%;
   height: 100%;
+  left: 0;
+  top: 0;
 }
 
 </style>

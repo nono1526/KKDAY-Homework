@@ -116,7 +116,7 @@ export default {
       if (this.hasNotNextStory) return
       this.activeStoryIndex++
       let idx = (this.stories[this.activeStoryIndex] || {}).idx
-      if (!idx) idx = this.getRandomIndex()
+      if (idx === undefined) idx = this.getRandomIndex()
       this.storyId = idx
       await this.changeImageByIndex(this.storyId)
     },

@@ -5,6 +5,29 @@
       :style="{
         backgroundImage: `url(${imageUrl})`
       }">
+      <div class="story__header">
+        <div
+          v-for="(num, i) in total"
+          :key="num"
+          class="story__header-tile"
+          :class="{
+            'story__header-tile--readed': activeIndex > i
+          }"
+        >
+          <div
+            class="story__header-tile-fill"
+            :class="{
+              'story__header-tile-fill--active': i === activeIndex,
+            }"
+            :style="{
+              'animation-duration': `${duration/1000}s`,
+              'animation-play-state': loading ? 'paused' : 'running'
+            }"
+          >
+          
+          </div>
+        </div>
+      </div>
 			<div class="story__text">
 				{{ text }}
 			</div>
@@ -38,12 +61,27 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    total: {
+      type: Number
+    },
+    activeIndex: {
+      type: Number
+    },
+    elapsedTime: {
+      type: Number
+    },
+    duration: {
+      type: Number
     }
   },
   data () {
     return {
       timer: null
     }
+  },
+  methods: {
+    
   }
 }
 </script>
@@ -104,10 +142,11 @@ export default {
   height: 100%;
 }
 
+
 .story__loading {
   position: absolute;
   z-index: 1;
-  background-color: rgba($color: #000000, $alpha: .5);
+  background-color: #313131;
   width: 100%;
   height: 100%;
   left: 0;
@@ -117,5 +156,49 @@ export default {
   align-items: center;
   color: white;
   font-size: 2rem;
+}
+
+.story__header {
+  display: flex;
+  position: absolute;
+  padding: 16px;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+  &-tile {
+    flex: 1;
+    min-width: 0;
+    height: 3px;
+    margin: 0 2px;
+    background-color: rgba(#fff, .5);
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+    &--readed {
+      background-color: #fff;
+    }
+  }
+  &-tile-fill {
+    width: 100%;
+    height: 100%;
+    transform: translateX(-100%);
+    background-color: #fff;
+    &--active {
+      animation-name: growthWidth;
+      animation-timing-function: linear;
+      animation-play-state: paused;
+      animation-fill-mode: forwards;
+    }
+  }
+}
+
+
+@keyframes growthWidth {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
 }
 </style>

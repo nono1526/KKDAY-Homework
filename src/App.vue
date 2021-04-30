@@ -10,8 +10,10 @@
       :activeIndex="activeStoryIndex"
       :duration="duration"
       @touchstart.prevent="pause"
-      @touchend="resume"
+      @touchend.prevent="resume"
       :isHoldStory="isHoldStory"
+      @mousedown.prevent="pause"
+      @mouseup.prevent="resume"
     >
     </VStory>
     
@@ -113,6 +115,7 @@ export default {
     this.init()
   },
   beforeDestroy () {
+    console.log('destroy')
     window.clearTimeout(this.timer)
   }
 }

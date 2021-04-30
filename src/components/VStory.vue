@@ -34,10 +34,8 @@
 				{{ text }}
 			</div>
       <div class="story__left"
-        @click="$emit('prev')"
       ></div>
       <div class="story__right"
-        @click="$emit('next')"
       ></div>
       <div class="story__loading"
         v-show="loading"

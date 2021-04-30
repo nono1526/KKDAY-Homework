@@ -1,4 +1,5 @@
-# kkday homework stories
+# kkday homework stories [DEMO](https://nono1526.github.io/KKDAY-Homework/)
+
 ## Feature
 * 顯示目前讀取進度
   * 進度使用 CSS3 Animation 控制 translateX，而不是修改 width 動畫效能

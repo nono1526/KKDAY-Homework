@@ -3,8 +3,6 @@
     <VStory
       :imageUrl="activeStory.imageUrl"
       :text="activeStory.text"
-      @prev="prevImage"
-      @next="nextImage"
       :loading="loading"
       :total="total"
       :activeIndex="activeStoryIndex"
@@ -26,7 +24,6 @@
 <script>
 import { getStoriesMeta, ajaxGetStoryByIndexUnstable } from '@/stories-api.js'
 import VStory from '@/components/VStory.vue'
-const stories = new Map()
 export default {
   name: 'App',
   components: {
@@ -34,7 +31,7 @@ export default {
   },
   data () {
     return {
-      activeStoryIndex: 0,
+      activeStoryIndex: -1,
       loading: false,
       total: 0,
       activeStory: {},
@@ -44,7 +41,9 @@ export default {
       isHoldStory: false,
       elapsedTime: 0,
       startHoldTime: 0,
-      showRetry: false
+      showRetry: false,
+      stories: [],
+      storyId: 0
     }
   },
   computed: {
@@ -58,7 +57,7 @@ export default {
   methods: {
     retry () {
       this.showRetry = false
-      this.changeImageByIndex(this.activeStoryIndex)
+      this.changeImageByIndex(this.storyId)
     },
     pause () {
       this.startHoldTime = new Date().getTime()
@@ -90,12 +89,14 @@ export default {
 
       this.timer = window.setTimeout(async () => {
         if (this.hasNotNextStory) return
-        this.changeImageByIndex(++this.activeStoryIndex)
+        this.storyId = this.getRandomIndex()
+        this.activeStoryIndex++
+        await this.changeImageByIndex(this.storyId)
       }, duration)
     },
-    async changeImageByIndex (index) {
+    async changeImageByIndex (id) {
       if (this.timer) window.clearTimeout(this.timer)
-      const res = await this.getStoryByIndex(index)
+      const res = await this.getStoryByIndex(id)
       if (!res) {
         this.showRetry = true
         return false
@@ -105,27 +106,49 @@ export default {
     },
     async prevImage () {
       if (this.hasNotPrevStory) return
-      await this.changeImageByIndex(--this.activeStoryIndex)
+      this.activeStoryIndex--
+      this.storyId = this.stories[this.activeStoryIndex].idx
+      await this.changeImageByIndex(this.storyId)
     },
     async nextImage () {
       if (this.hasNotNextStory) return
-      this.changeImageByIndex(++this.activeStoryIndex)
+      this.activeStoryIndex++
+      let idx = (this.stories[this.activeStoryIndex] || {}).idx
+      if (!idx) idx = this.getRandomIndex()
+      this.storyId = idx
+      await this.changeImageByIndex(this.storyId)
     },
     async init () {
       const MAX_STORIES = 6
-      this.total = Math.min(getStoriesMeta().length, MAX_STORIES)
-      this.changeImageByIndex(this.activeStoryIndex)
+      const { length, weightList } = getStoriesMeta()
+      this.total = Math.min(length, MAX_STORIES)
+      this.weightTable = []
+      weightList.forEach((weight, idx) => {
+        for (let i = 0; i < weight; i++) {
+          this.weightTable.push(idx)
+        }
+      })
+      this.storyId = this.getRandomIndex()
+      this.activeStoryIndex++
+      await this.changeImageByIndex(this.storyId)
     },
-
+    getRandomIndex () {
+      const weightIndex = Math.floor(Math.random() * this.weightTable.length)
+      const rndIndex = this.weightTable[weightIndex]
+      this.weightTable = this.weightTable.filter(idx => idx !== rndIndex)
+      return rndIndex
+    },
     async getStoryByIndex (index) {
       this.loading = true
       let story
-      if (stories.has(index)) {
-        story = stories.get(index)
+      if (this.stories.find(story => story.idx === index)) {
+        story = this.stories[this.activeStoryIndex]
       } else {
          story = await ajaxGetStoryByIndexUnstable(index)
          if (!story) return false
-         stories.set(index, story)
+         story.idx = index
+         this.stories.push(story)
+         
       }
       this.activeStory = story
       this.loading = false

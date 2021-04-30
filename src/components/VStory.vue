@@ -90,7 +90,7 @@ export default {
 .story {
 	height: 100vh;
   user-select: none;
-  @media screen and (min-width: 524px) {
+  @media screen and (min-width: 576px) {
     max-width: 56.25vh;
     margin-left: auto;
     margin-right: auto;

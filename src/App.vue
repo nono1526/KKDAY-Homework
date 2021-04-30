@@ -5,12 +5,11 @@
       :text="activeStory.text"
       @prev="prevImage"
       @next="nextImage"
-    ></VStory>
-    <div class="story__loading"
-      v-show="loading"
+      :loading="loading"
     >
-      loading...
-    </div>
+      
+    </VStory>
+    
   </div>
   
 </template>
@@ -64,7 +63,6 @@ export default {
     },
     async init () {
       this.total = getStoriesMeta().length
-
        const { duration } = await this.getStoryByIndex(this.activeStoryIndex)
        this.setNextPageCountdown(duration)
     },
@@ -89,14 +87,6 @@ body {
 	margin: 0;
 }
 
-.story__loading {
-  position: fixed;
-  z-index: 1;
-  background-color: #fff;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-}
+
 
 </style>

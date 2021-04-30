@@ -14,7 +14,11 @@
       <div class="story__right"
         @click="$emit('next')"
       ></div>
-
+      <div class="story__loading"
+        v-show="loading"
+      >
+        Loading...
+      </div>
 		</div>
     
 	</div>
@@ -30,6 +34,10 @@ export default {
     text: {
       type: String,
       default: ''
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -94,5 +102,20 @@ export default {
   background-color: #fff;
   width: 100%;
   height: 100%;
+}
+
+.story__loading {
+  position: absolute;
+  z-index: 1;
+  background-color: rgba($color: #000000, $alpha: .5);
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2rem;
 }
 </style>

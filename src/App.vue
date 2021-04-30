@@ -91,9 +91,7 @@ export default {
 
       this.timer = window.setTimeout(async () => {
         if (this.hasNotNextStory) return
-        this.storyId = this.getRandomIndex()
-        this.activeStoryIndex++
-        await this.changeImageByIndex(this.storyId)
+        this.nextImage()
       }, duration)
     },
     async changeImageByIndex (id) {
